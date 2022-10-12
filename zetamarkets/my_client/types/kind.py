@@ -98,6 +98,7 @@ KindJSON = typing.Union[UninitializedJSON, CallJSON, PutJSON, FutureJSON]
 
 
 def from_decoded(obj: dict) -> KindKind:
+    # print("Kind enum: ", obj)
     if not isinstance(obj, dict):
         raise ValueError("Invalid enum object")
     if "Uninitialized" in obj:

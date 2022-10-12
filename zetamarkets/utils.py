@@ -433,32 +433,8 @@ async def get_token_account_info(provider: Provider, key: PublicKey):
     if info == None:
         raise Exception("Token account " + str(key) + "doesn't exist")
 
-    print("info keys")
-    print(info.keys())
-    print(str(info))
-    print(str(info["result"]))
-    print(info["result"].keys())
-    print(info["result"]['value']['data'])
-    print(info["result"]['value']['data'][0])
+    data = decode_byte_string(info["result"]['value']['data'][0])
 
-    print(len(info["result"]['value']['data'][0]))
-    print(TOKEN_ACCOUNT_LAYOUT.sizeof())
-
-    ####### NEED TO DECODE THE DATA BEFORE CHECKING THE SIZE
-    ####### COULD BE THE SOURCE OF ALL THE PROBLEMS
-    lmao = decode_byte_string(info["result"]['value']['data'][0])
-    dream = TOKEN_ACCOUNT_LAYOUT.parse(lmao)
-    
-
-    yeeee = bytes.fromhex(info["result"]['value']['data'][0])
-
-    print("yeeeeeeeee: ", len(yeeee))
-
-    if len(yeeee) != TOKEN_ACCOUNT_LAYOUT.sizeof():
-        raise Exception("Invalid account size")
-    
-    ### use the decode byte string (rip the function from helpers.py line 378)
-    data = bytes.fromhex(info["result"]['value']['data'][0])
     account_info = TOKEN_ACCOUNT_LAYOUT.parse(data)
 
     account_info.address = key
