@@ -6,8 +6,14 @@ import solana
 from solana.keypair import Keypair
 from solana.rpc.api import Client
 from typing import Dict
-from zetamarkets import utils
-from zetamarkets.exchange import Exchange
+
+import sys
+sys.path.append('../')
+
+import utils
+from exchange import Exchange
+# from zetamarkets import utils
+# from zetamarkets.exchange import Exchange
 from solana.publickey import PublicKey
 from solana.rpc.async_api import AsyncClient
 

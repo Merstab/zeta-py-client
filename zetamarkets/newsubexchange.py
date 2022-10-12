@@ -83,6 +83,8 @@ class SubExchange:
         
         await self.update_zeta_group()
 
+        print("Updated Zeta Group")
+
         self._markets = await ZetaGroupMarkets(self._asset).load(self._asset, opts, 0)
 
         if self._zeta_group.products[len(self._zeta_group.products) - 1].market == PublicKey("11111111111111111111111111111111"):
@@ -107,11 +109,13 @@ class SubExchange:
     
     async def update_zeta_group(self):
         from exchange import Exchange
+        print("Fetch starting!")
         self._zeta_group = await my_client.accounts.zeta_group.ZetaGroup.fetch(
             Exchange._connection,
             self._zeta_group_address,
             utils.default_commitment()
         )
+        print("Fetch over!")
         self.update_margin_params()
     
     def update_margin_params(self):

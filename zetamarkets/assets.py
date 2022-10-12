@@ -1,4 +1,5 @@
 from asyncio import constants
+from solana.publickey import PublicKey
 import enum
 
 class Asset(enum.Enum):
@@ -7,7 +8,11 @@ class Asset(enum.Enum):
     ETH = 2
     UNDEFINED = 255
 
-from constants import MINTS
+MINTS = {
+    Asset.SOL: PublicKey("So11111111111111111111111111111111111111112"),
+    Asset.BTC: PublicKey("qfnqNqs3nCAHjnyCgLRDbBtq4p2MtHZxw8YjSyYhPoL"),
+    Asset.ETH: PublicKey("FeGn77dhg1KXRRFeSwwMiykZnZPw5JXW6naf2aQgZDQf")
+}
 
 def assetToName(asset):
     if asset == Asset.SOL: return "SOL"

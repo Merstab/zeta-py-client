@@ -11,6 +11,8 @@ import solana.rpc.api
 from spl.token._layouts import ACCOUNT_LAYOUT as TOKEN_ACCOUNT_LAYOUT
 from spl.token.constants import TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID
 import my_client.accounts
+from base64 import b64decode
+from based58 import b58decode
 
 def default_commitment() -> Dict:
     return {
@@ -417,12 +419,20 @@ async def get_market_indexes(program_id: PublicKey, zeta_group: PublicKey):
 def convert_native_integer_to_decimal(amount):
     return amount/(10**constants.PLATFORM_PRECISION)
 
+def decode_byte_string(byte_string: str, encoding: str = "base64") -> bytes:
+    """Decode an encoded string from an RPC Response."""
+    b_str = str.encode(byte_string)
+    if encoding == "base64":
+        return b64decode(b_str)
+    if encoding == "base58":
+        return b58decode(b_str)
+
 async def get_token_account_info(provider: Provider, key: PublicKey):
     print("pubkey of token account: " + str(key))
     info = await provider.connection.get_account_info(key)
     if info == None:
         raise Exception("Token account " + str(key) + "doesn't exist")
-    
+
     print("info keys")
     print(info.keys())
     print(str(info))
@@ -434,10 +444,20 @@ async def get_token_account_info(provider: Provider, key: PublicKey):
     print(len(info["result"]['value']['data'][0]))
     print(TOKEN_ACCOUNT_LAYOUT.sizeof())
 
-    if len(info["result"]['value']['data'][0]) != TOKEN_ACCOUNT_LAYOUT.sizeof():
-        raise Exception("Invalid account size")
+    ####### NEED TO DECODE THE DATA BEFORE CHECKING THE SIZE
+    ####### COULD BE THE SOURCE OF ALL THE PROBLEMS
+    lmao = decode_byte_string(info["result"]['value']['data'][0])
+    dream = TOKEN_ACCOUNT_LAYOUT.parse(lmao)
     
 
+    yeeee = bytes.fromhex(info["result"]['value']['data'][0])
+
+    print("yeeeeeeeee: ", len(yeeee))
+
+    if len(yeeee) != TOKEN_ACCOUNT_LAYOUT.sizeof():
+        raise Exception("Invalid account size")
+    
+    ### use the decode byte string (rip the function from helpers.py line 378)
     data = bytes.fromhex(info["result"]['value']['data'][0])
     account_info = TOKEN_ACCOUNT_LAYOUT.parse(data)
 

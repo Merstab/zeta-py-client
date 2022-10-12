@@ -80,6 +80,7 @@ class ZetaGroup:
         address: PublicKey,
         commitment: typing.Optional[Commitment] = None,
     ) -> typing.Optional["ZetaGroup"]:
+        print(address)
         resp = await conn.get_account_info(address, commitment=commitment)
         info = resp["result"]["value"]
         if info is None:
@@ -87,6 +88,9 @@ class ZetaGroup:
         if info["owner"] != str(PROGRAM_ID):
             raise ValueError("Account does not belong to this program")
         bytes_data = b64decode(info["data"][0])
+        print("received bytes_data: ", bytes_data)
+        print("-----------------------")
+        print(cls.decode(bytes_data))
         return cls.decode(bytes_data)
 
     @classmethod
@@ -109,10 +113,12 @@ class ZetaGroup:
 
     @classmethod
     def decode(cls, data: bytes) -> "ZetaGroup":
+        print("ACCOUNT_DISCRIMINATOR_SIZE: ", ACCOUNT_DISCRIMINATOR_SIZE)
         if data[:ACCOUNT_DISCRIMINATOR_SIZE] != cls.discriminator:
             raise AccountInvalidDiscriminator(
                 "The discriminator for this account is invalid"
             )
+        print(len(data[ACCOUNT_DISCRIMINATOR_SIZE:]))
         dec = ZetaGroup.layout.parse(data[ACCOUNT_DISCRIMINATOR_SIZE:])
         return cls(
             nonce=dec.nonce,
