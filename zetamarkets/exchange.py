@@ -122,7 +122,7 @@ class Exchange(metaclass=ExchangeMeta):
         self._program_subscription_ids = []
         for asset in assets:
             await self.add_sub_exchange(asset, SubExchange())
-            await self.get_sub_exchange(asset).initialize(asset)
+            await Exchange.get_sub_exchange(asset).initialize(asset)
         self._is_setup = True
         Exchange.program = self._program
         Exchange.clock_timestamp = None
@@ -186,7 +186,7 @@ class Exchange(metaclass=ExchangeMeta):
             print("Initialize zeta group failed")
 
         await self.update_state(self)
-        await self.get_sub_exchange(asset).update_zeta_group()
+        await Exchange.get_sub_exchange(asset).update_zeta_group()
 
     @classmethod
     async def load(self, program_id: PublicKey, network, connection, opts, wallet, throttle_ms, assets, callback):
@@ -227,7 +227,7 @@ class Exchange(metaclass=ExchangeMeta):
         # await self.subscribe_oracle(self.assets, callback)
 
         for asset in assets:
-            await self.get_sub_exchange(self, asset).load(
+            await Exchange.get_sub_exchange(asset).load(
                 asset,
                 self.program_id,
                 self.network,
@@ -318,16 +318,16 @@ class Exchange(metaclass=ExchangeMeta):
         await self.update_state()
     
     async def initialize_market_nodes(self, asset, zeta_group):
-        await self.get_sub_exchange(asset).initialize_market_nodes(zeta_group)
+        await Exchange.get_sub_exchange(asset).initialize_market_nodes(zeta_group)
     
     def subscribe_market(self, asset, index):
-        self.get_sub_exchange(asset).markets.subscribe_market(index)
+        Exchange.get_sub_exchange(asset).markets.subscribe_market(index)
     
     def unsubscribe_market(self, asset, index):
-        self.get_sub_exchange(asset).markets.unsubscribe_market(index)
+        Exchange.get_sub_exchange(asset).markets.unsubscribe_market(index)
     
     async def update_orderbook(self, asset, index):
-        await self.get_sub_exchange(asset).markets.markets[index].update_orderbook()
+        await Exchange.get_sub_exchange(asset).markets.markets[index].update_orderbook()
     
     async def update_all_orderbooks(self, live):
         all_live_markets = self._markets
@@ -385,85 +385,85 @@ class Exchange(metaclass=ExchangeMeta):
                 market.update_orderbook(False)
 
     def get_zeta_group_markets(self, asset):
-        return self.get_sub_exchange(asset).markets
+        return Exchange.get_sub_exchange(asset).markets
     
     def get_market(self, asset, index):
-        return self.get_sub_exchange(asset)._markets.markets[index]
+        return Exchange.get_sub_exchange(asset)._markets.markets[index]
     
     def get_markets(self, asset):
-        return self.get_sub_exchange(self, asset)._markets.markets
+        return Exchange.get_sub_exchange(asset)._markets.markets
     
     def get_markets_by_expiry_index(self, asset, index):
-        return self.get_sub_exchange(asset).markets.get_markets_by_expiry_index(index)
+        return Exchange.get_sub_exchange(asset).markets.get_markets_by_expiry_index(index)
     
     def get_expiry_series_list(self, asset):
-        return self.get_sub_exchange(asset).markets.expiry_series
+        return Exchange.get_sub_exchange(asset).markets.expiry_series
     
     def get_zeta_group(self, asset):
-        return self.get_sub_exchange(asset).zeta_group
+        return Exchange.get_sub_exchange(asset).zeta_group
     
     def get_zeta_group_address(self, asset):
-        return self.get_sub_exchange(asset).zeta_group_address
+        return Exchange.get_sub_exchange(asset).zeta_group_address
     
     def get_greeks(self, asset):
-        return self.get_sub_exchange(asset).greeks
+        return Exchange.get_sub_exchange(asset).greeks
     
     def get_orderbook(self, asset, index):
-        return self.get_sub_exchange(asset).markets.markets[index].orderbook
+        return Exchange.get_sub_exchange(asset).markets.markets[index].orderbook
     
     def get_mark_price(self, asset, index: int) -> int:
-        return self.get_sub_exchange(asset).get_mark_price(index)
+        return Exchange.get_sub_exchange(asset).get_mark_price(index)
     
     def get_insurance_vault_address(self, asset):
-        return self.get_sub_exchange(asset).insurance_vault_address
+        return Exchange.get_sub_exchange(asset).insurance_vault_address
 
     def get_vault_address(self, asset):
-        return self.get_sub_exchange(asset).vault_address
+        return Exchange.get_sub_exchange(asset).vault_address
     
     def get_socialized_loss_account_address(self, asset):
-        return self.get_sub_exchange(asset).socialized_loss_account_address
+        return Exchange.get_sub_exchange(asset).socialized_loss_account_address
     
     async def update_pricing_parameters(self, asset, args):
-        await self.get_sub_exchange(asset).update_pricing_parameters(args)
+        await Exchange.get_sub_exchange(asset).update_pricing_parameters(args)
     
     def get_margin_params(self, asset):
-        return self.get_sub_exchange(asset).margin_params
+        return Exchange.get_sub_exchange(asset).margin_params
     
     async def update_margin_parameters(self, asset, args):
-        await self.get_sub_exchange(asset).update_margin_parameters(args)
+        await Exchange.get_sub_exchange(asset).update_margin_parameters(args)
     
     async def update_volatility_nodes(self, asset, nodes):
-        await self.get_sub_exchange(asset).update_volatility_nodes(nodes)
+        await Exchange.get_sub_exchange(asset).update_volatility_nodes(nodes)
     
     async def initialize_zeta_markets(self, asset):
-        await self.get_sub_exchange(asset).initialize_zeta_markets()
+        await Exchange.get_sub_exchange(asset).initialize_zeta_markets()
     
     async def initialize_market_strikes(self, asset):
-        await self.get_sub_exchange(asset).initialize_market_strikes()
+        await Exchange.get_sub_exchange(asset).initialize_market_strikes()
     
     async def update_zeta_group(self, asset):
-        await self.get_sub_exchange(asset).update_zeta_group()
+        await Exchange.get_sub_exchange(asset).update_zeta_group()
     
     async def update_pricing(self, asset, expiry_index):
-        await self.get_sub_exchange(asset).update_pricing(expiry_index)
+        await Exchange.get_sub_exchange(asset).update_pricing(expiry_index)
     
     async def retreat_market_nodes(self, asset, expiry_index):
-        await self.get_sub_exchange(asset).retreat_market_nodes(expiry_index)
+        await Exchange.get_sub_exchange(asset).retreat_market_nodes(expiry_index)
     
     async def update_sub_exchange_state(self, asset):
-        await self.get_sub_exchange(asset).update_sub_exchange_state()
+        await Exchange.get_sub_exchange(asset).update_sub_exchange_state()
     
     async def whitelist_user_for_deposit(self, asset, user):
-        await self.get_sub_exchange(asset).whitelist_user_for_deposit(user)
+        await Exchange.get_sub_exchange(asset).whitelist_user_for_deposit(user)
     
     async def whitelist_user_for_insurance_vault(self, asset, user):
-        await self.get_sub_exchange(asset).whitelist_user_for_insurance_vault(user)
+        await Exchange.get_sub_exchange(asset).whitelist_user_for_insurance_vault(user)
     
     async def whitelist_user_for_trading_fees(self, asset, user):
-        await self.get_sub_exchange(asset).whitelist_user_for_trading_fees(user)
+        await Exchange.get_sub_exchange(asset).whitelist_user_for_trading_fees(user)
     
     async def treasury_movement(self, asset, treasury_movement_type, amount):
-        await self.get_sub_exchange(asset).treasury_movement(
+        await Exchange.get_sub_exchange(asset).treasury_movement(
             treasury_movement_type,
             amount
         )
@@ -499,7 +499,7 @@ class Exchange(metaclass=ExchangeMeta):
     async def update_zeta_group(self, asset):
         # self._zeta_group = await self._program.account.get('ZetaGroup').fetch(self._zeta_group_address)
         # Exchange._zeta_group = self._zeta_group
-        await self.get_sub_exchange(asset).update_zeta_group()
+        await Exchange.get_sub_exchange(asset).update_zeta_group()
 
     def update_margin_params(self):
         if self._zeta_group is None:

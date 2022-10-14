@@ -57,13 +57,13 @@ async def deposit_ix(asset, amount, margin_account, usdc_account, user_key, whit
     return deposit({"amount": amount}, {
         "zeta_group": sub_exchange.zeta_group_address,
         "margin_account": margin_account,
-        "vault": sub_exchange.vault_address,
+        "vault": sub_exchange._vault_address,
         "user_token_account": usdc_account,
-        "socialized_loss_account": sub_exchange.socialized_loss_account_address,
+        "socialized_loss_account": sub_exchange._socialized_loss_account_address,
         "authority": user_key,
         "token_program": TOKEN_PROGRAM_ID,
         "state": Exchange.state_address,
-        "greeks": sub_exchange.zeta_group.greels
+        "greeks": sub_exchange.zeta_group.greeks
     })
 
 def deposit_insurance_vault_ix(asset, amount, insurance_deposit_account, usdc_account, user_key):
@@ -75,8 +75,8 @@ def deposit_insurance_vault_ix(asset, amount, insurance_deposit_account, usdc_ac
             "insurance_vault": sub_exchange.insurance_vault_address,
             "insurance_deposit_account": insurance_deposit_account,
             "user_token_account": usdc_account,
-            "zeta_vault": sub_exchange.vault_address,
-            "socialized_loss_account": sub_exchange.socialized_loss_account_address,
+            "zeta_vault": sub_exchange._vault_address,
+            "socialized_loss_account": sub_exchange._socialized_loss_account_address,
             "authority": user_key,
             "token_program": TOKEN_PROGRAM_ID
         }
@@ -103,14 +103,14 @@ def withdraw_ix(asset, amount, margin_account, usdc_account, user_key):
         {
             "state": Exchange.state_address,
             "zeta_group": sub_exchange.zeta_group_address,
-            "vault": sub_exchange.vault_address,
+            "vault": sub_exchange._vault_address,
             "margin_account": margin_account,
             "user_token_account": usdc_account,
             "authority": user_key,
             "token_program": TOKEN_PROGRAM_ID,
             "greeks": sub_exchange.zeta_groups.greeks,
             "oracle": sub_exchange.zeta_group.oracle,
-            "socialized_loss_account": sub_exchange.socialized_loss_account_address
+            "socialized_loss_account": sub_exchange._socialized_loss_account_address
         }
     )
 

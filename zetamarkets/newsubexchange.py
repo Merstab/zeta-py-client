@@ -16,6 +16,22 @@ class SubExchange:
     @property
     def zeta_group_address(self):
         return self._zeta_group_address
+    
+    @property
+    def insurance_vault_address(self):
+        return self._insurance_vault_address
+    
+    @property
+    def markets(self):
+        return self._markets
+    
+    @property
+    def greeks(self):
+        return self._greeks
+    
+    @property
+    def greeks_address(self):
+        return self._greeks_address
 
     def __init__(self):
         self._is_setup = False
