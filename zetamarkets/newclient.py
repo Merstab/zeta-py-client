@@ -10,6 +10,7 @@ import constants
 from newsubclient import SubClient
 from solana.publickey import PublicKey
 import my_client.accounts
+import sys
 
 class Client:
     def public_key(self):
@@ -126,6 +127,9 @@ class Client:
                 throttle
             )
             client.add_sub_client(asset, subclient)
+            print(subclient)
+            print("added subclient for asset", asset)
+            print(client.get_all_subclients())
         
         ### TODO: FIGURE OUT THIS POLL INTERVAL STUFF
         # client.set_polling(constants.DEFAULT_CLIENT_TIMER_INTERVAL)
@@ -138,10 +142,13 @@ class Client:
         self._subclients[asset] = subclient
     
     def get_sub_client(self, asset) -> SubClient:
+        print("subclients")
+        print(self._subclients)
+        print(asset)
         return self._subclients[asset]
     
     def get_all_subclients(self) -> list[SubClient]:
-        self._subclients.values()
+        return self._subclients.values()
     
     async def set_referral_data(self):
         try:

@@ -255,7 +255,7 @@ class Exchange(metaclass=ExchangeMeta):
         self._sub_exchanges[asset] = sub_exchange
         Exchange._sub_exchanges[asset] = sub_exchange
     
-    def get_sub_exchange(self, asset: Asset) -> SubExchange:
+    def get_sub_exchange(asset: Asset) -> SubExchange:
         # print(self._sub_exchanges)
         print("getting subexchange of asset: " + str(asset))
         print(Exchange._sub_exchanges.keys())

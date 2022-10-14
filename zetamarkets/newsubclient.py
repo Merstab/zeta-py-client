@@ -77,7 +77,7 @@ class SubClient:
     
     def __init__(self, asset, parent):
         self._asset = asset
-        self._sub_exchange = Exchange.get_sub_exchange(self, asset)
+        self._sub_exchange = Exchange.get_sub_exchange(asset)
         self._open_orders_accounts = []
         for i in range(len(self._sub_exchange.zeta_group.products)):
             self._open_orders_accounts.append(PublicKey("11111111111111111111111111111111"))
@@ -161,6 +161,7 @@ class SubClient:
         #         "TradeEvent",
                 
         #     )
+        return subClient
 
     async def poll_update(self):
         if Exchange.clock_timestamp > self._last_update_timestamp + self._poll_interval or self._pending_update:

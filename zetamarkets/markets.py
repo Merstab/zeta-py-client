@@ -16,8 +16,8 @@ class ZetaGroupMarkets:
 
     def __init__(self, asset):
         from exchange import Exchange
-        self._expiry_series = [None] * len(Exchange.get_sub_exchange(self, asset)._zeta_group.expiry_series)
-        self._markets = [None] * len(Exchange.get_sub_exchange(self, asset)._zeta_group.products)
+        self._expiry_series = [None] * len(Exchange.get_sub_exchange(asset)._zeta_group.expiry_series)
+        self._markets = [None] * len(Exchange.get_sub_exchange(asset)._zeta_group.products)
         self._last_poll_timestamp = 0
         self._subscribed_market_indexes = set()
         self._asset = asset
@@ -38,7 +38,7 @@ class ZetaGroupMarkets:
     async def load(self, asset: Asset, opts, throttle_ms: int):
         from exchange import Exchange
         instance = ZetaGroupMarkets(asset)
-        sub_exchange = Exchange.get_sub_exchange(self, asset)
+        sub_exchange = Exchange.get_sub_exchange(asset)
 
         products_per_expiry = PRODUCTS_PER_EXPIRY
         indexes = []
@@ -98,7 +98,7 @@ class ZetaGroupMarkets:
 
     def update_expiry_series(self):
         from exchange import Exchange
-        subex = Exchange.get_sub_exchange(self, self._asset)
+        subex = Exchange.get_sub_exchange(self._asset)
         for i in range(len(subex._zeta_group.products)):
             self._markets[i].update_strike()
         self._front_expiry_index = subex._zeta_group.front_expiry_index
@@ -295,7 +295,7 @@ class Market:
     
     def update_strike(self):
         from exchange import Exchange
-        strike = Exchange.get_sub_exchange(self, self._asset).zeta_group.products[self._market_index].strike
+        strike = Exchange.get_sub_exchange(self._asset).zeta_group.products[self._market_index].strike
         if not strike.is_set:
             self._strike = None
         else:
